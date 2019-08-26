@@ -4,11 +4,14 @@ const morgan = require('morgan');
 const UserRoutes = require('./routes/users');
 const AuthRoutes = require('./routes/auth');
 const ContactRoutes = require('./routes/contacts');
+const connectDB = require('./config/db');
 
 const app = express();
+connectDB();
 
 // Used below code to log request
 app.use(morgan('dev'));
+app.use(express.json({ extended: false })); // body-Parser. By default included in express.js
 
 // All application routes
 app.use('/api/auth', AuthRoutes);
