@@ -1,11 +1,14 @@
 import {
+  GET_CONTACTS,
+  CLEAR_CONTACTS,
   ADD_CONTACT,
   DELETE_CONTACT,
   SET_CURRENT,
   CLEAR_CURRENT,
   UPDATE_CONTACT,
   FILTER_CONTACTS,
-  CLEAR_FILTER
+  CLEAR_FILTER,
+  CONTACT_ERROR
 } from '../types';
 
 export default (state, action) => {
@@ -13,16 +16,32 @@ export default (state, action) => {
 
   switch (type) {
     case ADD_CONTACT:
-      return { ...state, contacts: [payload, ...state.contacts] };
+      return {
+        ...state,
+        contacts: [payload, ...state.contacts],
+        loading: false
+      };
+
+    case UPDATE_CONTACT:
+      return {
+        ...state,
+        contacts: state.contacts.map(contact =>
+          contact._id === payload._id ? payload : contact
+        ),
+        loading: false
+      };
+
+    case GET_CONTACTS:
+      return { ...state, contacts: payload, loading: false };
 
     case DELETE_CONTACT:
       return {
         ...state,
-        contacts: state.contacts.filter(contact => contact.id !== payload),
+        contacts: state.contacts.filter(contact => contact._id !== payload),
         filtered:
           state.filtered === null
             ? null
-            : state.filtered.filter(contact => contact.id !== payload)
+            : state.filtered.filter(contact => contact._id !== payload)
       };
 
     case SET_CURRENT:
@@ -30,14 +49,6 @@ export default (state, action) => {
 
     case CLEAR_CURRENT:
       return { ...state, current: null };
-
-    case UPDATE_CONTACT:
-      return {
-        ...state,
-        contacts: state.contacts.map(contact =>
-          contact.id === payload.id ? payload : contact
-        )
-      };
 
     case FILTER_CONTACTS:
       return {
@@ -50,6 +61,18 @@ export default (state, action) => {
 
     case CLEAR_FILTER:
       return { ...state, filtered: null };
+
+    case CONTACT_ERROR:
+      return { ...state, error: payload };
+
+    case CLEAR_CONTACTS:
+      return {
+        ...state,
+        contacts: null,
+        filtered: null,
+        error: null,
+        current: null
+      };
 
     default:
       return state;

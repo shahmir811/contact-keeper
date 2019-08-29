@@ -12,10 +12,10 @@ const ContactItem = ({ contact }) => {
     clearCurrentContact
   } = contactContext;
 
-  const { id, name, email, phone, type } = contact;
+  const { _id, name, email, phone, type } = contact;
 
-  const deleteThisContact = id => {
-    deleteContact(id);
+  const deleteThisContact = () => {
+    deleteContact(_id);
     clearCurrentContact();
   };
 
@@ -54,7 +54,7 @@ const ContactItem = ({ contact }) => {
       </button>
       <button
         className='btn btn-danger btn-sm'
-        onClick={() => deleteThisContact(id)}
+        onClick={() => deleteThisContact()}
       >
         Delete
       </button>
